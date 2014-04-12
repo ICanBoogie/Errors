@@ -16,6 +16,8 @@ namespace ICanBoogie;
  */
 class Errors implements \ArrayAccess, \Countable, \Iterator
 {
+	static public $message_constructor;
+
 	protected $errors = array(null => array());
 
 	/**
@@ -206,5 +208,45 @@ class Errors implements \ArrayAccess, \Countable, \Iterator
 	public function clear()
 	{
 		$this->errors = array(null => array());
+	}
+
+	/**
+	 * Formats the given string by replacing placeholders with the values provided.
+	 *
+	 * @param string $pattern The format pattern.
+	 * @param array $args An array of replacements for the placeholders.
+	 * @param array $options Options for the formatter.
+	 *
+	 * @return mixed A string or a stringyfiable object.
+	 *
+	 * @see \ICanBoogie\I18n\FormattedString
+	 * @see \ICanBoogie\FormattedString
+	 * @see \ICanBoogie\format
+	 */
+	public function format($pattern, array $args=array(), array $options=array())
+	{
+		if (!self::$message_constructor)
+		{
+			$constructors = array('ICanBoogie\I18n\FormattedString', 'ICanBoogie\FormattedString');
+
+			foreach ($constructors as $constructor)
+			{
+				if (class_exists($constructor, true))
+				{
+					self::$message_constructor = $constructor;
+
+					break;
+				}
+			}
+		}
+
+		$constructor = self::$message_constructor;
+
+		if (!$constructor)
+		{
+			return \ICanBoogie\format($pattern, $args);
+		}
+
+		return new $constructor($pattern, $args, $options);
 	}
 }
