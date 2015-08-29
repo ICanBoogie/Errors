@@ -249,4 +249,21 @@ class Errors implements \ArrayAccess, \Countable, \Iterator
 
 		return new $constructor($pattern, $args, $options);
 	}
+
+	/**
+	 * Formats and add an error message.
+	 *
+	 * @param string $id
+	 * @param string $pattern The format pattern.
+	 * @param array $args An array of replacements for the placeholders.
+	 * @param array $options Options for the formatter.
+	 *
+	 * @return string The formatted message.
+	 */
+	public function add($id, $pattern, array $args = array(), array $options = array())
+	{
+		$this[$id] = $message = $this->format($pattern, $args, $options);
+
+		return $message;
+	}
 }
