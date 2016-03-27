@@ -1,5 +1,3 @@
-.README.md.html
 composer.lock
-composer.phar
-docs
+build
 vendor

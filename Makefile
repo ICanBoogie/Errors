@@ -1,34 +1,38 @@
-install:
-	@if [ ! -f "composer.phar" ] ; then \
-		echo "Installing composer..." ; \
-		curl -s https://getcomposer.org/installer | php ; \
-	fi
-	
-	@php composer.phar install
+# customization
 
-test:
-	@if [ ! -d "vendor" ] ; then \
-		make install ; \
-	fi
+PACKAGE_NAME = icanboogie/errors
+PACKAGE_VERSION = 1.0
 
+# do not edit the following lines
+
+usage:
+	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
+
+vendor:
+	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer install
+
+update:
+	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer update
+
+autoload: vendor
+	@composer dump-autoload
+
+test: vendor
 	@phpunit
 
-doc:
-	@if [ ! -d "vendor" ] ; then \
-		make install ; \
-	fi
+test-coverage: vendor
+	@mkdir -p build/coverage
+	@phpunit --coverage-html build/coverage
 
-	@mkdir -p "docs"
+doc: vendor
+	@mkdir -p build/docs
+	@apigen generate \
+	--source lib \
+	--destination build/docs/ \
+	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
+	--template-theme "bootstrap"
 
-	@apigen \
-	--source ./ \
-	--destination docs/ --title ICanBoogie/Errors \
-	--exclude "*/tests/*" \
-	--exclude "*/composer/*" \
-	--template-config /usr/share/php/data/ApiGen/templates/bootstrap/config.neon
-	
 clean:
-	@rm -fR docs
+	@rm -fR build
 	@rm -fR vendor
 	@rm -f composer.lock
-	@rm -f composer.phar
