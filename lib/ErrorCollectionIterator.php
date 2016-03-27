@@ -12,11 +12,9 @@
 namespace ICanBoogie;
 
 /**
- * Representation of a rendered error collection.
- *
- * **Note:** The error collection is actually rendered as the instance is iterated.
+ * Iterates over an error collection and return rendered errors.
  */
-class RenderedErrorCollection implements \IteratorAggregate
+class ErrorCollectionIterator implements \IteratorAggregate
 {
 	/**
 	 * @var ErrorCollection

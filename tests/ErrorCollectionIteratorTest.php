@@ -14,7 +14,7 @@ namespace ICanBoogie;
 /**
  * @group render
  */
-class RenderedErrorCollectionTest extends \PHPUnit_Framework_TestCase
+class ErrorCollectionIteratorTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_renderer()
 	{
@@ -32,7 +32,7 @@ class RenderedErrorCollectionTest extends \PHPUnit_Framework_TestCase
 			->add_generic($format, [ 'arg' => $arg2 ])
 		;
 
-		$renderer = new RenderedErrorCollection($errors);
+		$renderer = new ErrorCollectionIterator($errors);
 		$rendered = [];
 
 		foreach ($renderer as $a => $r)
@@ -66,7 +66,7 @@ class RenderedErrorCollectionTest extends \PHPUnit_Framework_TestCase
 			->add_generic($format, [ 'arg' => $arg2 ])
 		;
 
-		$renderer = new RenderedErrorCollection($errors, function (Error $error, $attribute, ErrorCollection $collection) use ($errors) {
+		$renderer = new ErrorCollectionIterator($errors, function (Error $error, $attribute, ErrorCollection $collection) use ($errors) {
 
 			$this->assertSame($errors, $collection);
 
