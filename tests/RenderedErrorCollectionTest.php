@@ -49,4 +49,45 @@ class RenderedErrorCollectionTest extends \PHPUnit_Framework_TestCase
 
 		], $rendered);
 	}
+
+	public function test_render_with_customer_error_renderer()
+	{
+		$format = "error: {arg}";
+		$arg1 = uniqid();
+		$arg2 = uniqid();
+		$arg3 = uniqid();
+		$arg4 = uniqid();
+		$attribute = uniqid();
+
+		$errors = (new ErrorCollection)
+			->add($attribute, $format, [ 'arg' => $arg3 ])
+			->add_generic($format, [ 'arg' => $arg1 ])
+			->add($attribute, $format, [ 'arg' => $arg4 ])
+			->add_generic($format, [ 'arg' => $arg2 ])
+		;
+
+		$renderer = new RenderedErrorCollection($errors, function (Error $error, $attribute, ErrorCollection $collection) use ($errors) {
+
+			$this->assertSame($errors, $collection);
+
+			return strrev($error);
+
+		});
+
+		$rendered = [];
+
+		foreach ($renderer as $a => $r)
+		{
+			$rendered[] = [ $a, $r ];
+		}
+
+		$this->assertSame([
+
+			[ ErrorCollection::GENERIC, strrev("error: {$arg1}") ],
+			[ ErrorCollection::GENERIC, strrev("error: {$arg2}") ],
+			[ $attribute, strrev("error: {$arg3}") ],
+			[ $attribute, strrev("error: {$arg4}") ],
+
+		], $rendered);
+	}
 }

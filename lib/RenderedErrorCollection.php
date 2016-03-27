@@ -24,11 +24,18 @@ class RenderedErrorCollection implements \IteratorAggregate
 	private $collection;
 
 	/**
-	 * @param ErrorCollection $collection
+	 * @var callable|RenderError
 	 */
-	public function __construct(ErrorCollection $collection)
+	private $render_error;
+
+	/**
+	 * @param ErrorCollection $collection
+	 * @param RenderError|callable $render_error
+	 */
+	public function __construct(ErrorCollection $collection, callable $render_error = null)
 	{
 		$this->collection = $collection;
+		$this->render_error = $render_error;
 	}
 
 	/**
@@ -54,6 +61,8 @@ class RenderedErrorCollection implements \IteratorAggregate
 	 */
 	protected function render_error(Error $error, $attribute)
 	{
-		return (string) $error;
+		$render_error = $this->render_error;
+
+		return $render_error ? $render_error($error, $attribute, $this->collection) : (string) $error;
 	}
 }
