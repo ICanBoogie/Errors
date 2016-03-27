@@ -158,7 +158,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	}
 
 	/**
-	 * @return Error[]
+	 * @inheritdoc
 	 */
 	public function getIterator()
 	{
@@ -232,7 +232,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	/**
 	 * Converts the object into an array.
 	 *
-	 * @return array
+	 * @return Error[][]
 	 */
 	public function to_array()
 	{
