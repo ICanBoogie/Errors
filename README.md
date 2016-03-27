@@ -59,7 +59,7 @@ $e->each(function($name, $message) {
 
 ## Requirements
 
-The package requires PHP 5.3 or later.
+The package requires PHP 5.5 or later.
 
 
 

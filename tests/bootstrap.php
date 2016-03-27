@@ -11,17 +11,4 @@
 
 namespace ICanBoogie;
 
-/**
- * @deprecated
- *
- * @see ErrorCollection
- *
- * @codeCoverageIgnore
- */
-class Errors extends ErrorCollection
-{
-	/**
-	 * @deprecated
-	 */
-	static public $message_constructor;
-}
+require __DIR__ . '/../vendor/autoload.php';
