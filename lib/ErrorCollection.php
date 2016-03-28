@@ -158,6 +158,31 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	}
 
 	/**
+	 * Clears errors.
+	 *
+	 * @return $this
+	 */
+	public function clear()
+	{
+		$this->collection = [];
+
+		return $this;
+	}
+
+	/**
+	 * Merges with another error collection.
+	 *
+	 * @param ErrorCollection $collection
+	 */
+	public function merge(ErrorCollection $collection)
+	{
+		foreach ($collection as $attribute => $error)
+		{
+			$this->add($attribute, $error);
+		}
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function getIterator()
@@ -237,17 +262,5 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	public function to_array()
 	{
 		return array_filter(array_merge([ self::GENERIC => [] ], $this->collection));
-	}
-
-	/**
-	 * Clears errors.
-	 *
-	 * @return $this
-	 */
-	public function clear()
-	{
-		$this->collection = [];
-
-		return $this;
 	}
 }

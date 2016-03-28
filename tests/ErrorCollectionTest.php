@@ -170,6 +170,29 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(0, $errors->clear()->count());
 	}
 
+	public function test_merge()
+	{
+		$er1 = new Error(uniqid());
+		$er2 = new Error(uniqid());
+
+		$col1 = (new ErrorCollection)
+			->add_generic($er1);
+		$col2 = (new ErrorCollection)
+			->add_generic($er2);
+
+		$col1->merge($col2);
+
+		$this->assertSame([
+
+			ErrorCollection::GENERIC => [
+
+				$er1, $er2
+
+			]
+
+		], $col1->to_array());
+	}
+
 	public function test_json_serialize()
 	{
 		$format = "error: {arg}";
