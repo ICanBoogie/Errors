@@ -69,6 +69,54 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($error, reset($errors));
 	}
 
+	/**
+	 * @dataProvider provide_test_add_with_invalid_attribute
+	 * @expectedException \InvalidArgumentException
+	 *
+	 * @param mixed $attribute
+	 */
+	public function test_add_with_invalid_attribute($attribute)
+	{
+		$this->errors->add($attribute, "Error");
+	}
+
+	public function provide_test_add_with_invalid_attribute()
+	{
+		return [
+
+			[ null ],
+			[ false ],
+			[ true ],
+			[ 123 ],
+			[ [] ],
+			[ new \stdClass ]
+
+		];
+	}
+
+	/**
+	 * @dataProvider provide_test_add_with_invalid_type
+	 * @expectedException \InvalidArgumentException
+	 *
+	 * @param mixed $error
+	 */
+	public function test_add_with_invalid_type($error)
+	{
+		$this->errors->add(uniqid(), $error);
+	}
+
+	public function provide_test_add_with_invalid_type()
+	{
+		return [
+
+			[ false ],
+			[ [ uniqid() => uniqid() ] ],
+			[ 1234 ],
+			[ new \stdClass ]
+
+		];
+	}
+
 	public function test_add_generic()
 	{
 		$error = new Error(uniqid(), [ uniqid() => uniqid() ]);
