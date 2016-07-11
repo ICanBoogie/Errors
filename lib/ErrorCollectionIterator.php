@@ -33,7 +33,7 @@ class ErrorCollectionIterator implements \IteratorAggregate
 	public function __construct(ErrorCollection $collection, callable $render_error = null)
 	{
 		$this->collection = $collection;
-		$this->render_error = $render_error;
+		$this->render_error = $render_error ?: function (Error $error) { return (string) $error; };
 	}
 
 	/**
@@ -61,6 +61,6 @@ class ErrorCollectionIterator implements \IteratorAggregate
 	{
 		$render_error = $this->render_error;
 
-		return $render_error ? $render_error($error, $attribute, $this->collection) : (string) $error;
+		return $render_error($error, $attribute, $this->collection);
 	}
 }
