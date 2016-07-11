@@ -281,14 +281,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	 */
 	public function count()
 	{
-		$n = 0;
-
-		foreach ($this->collection as $errors)
-		{
-			$n += count($errors);
-		}
-
-		return $n;
+		return count($this->collection,  COUNT_RECURSIVE) - count($this->collection);
 	}
 
 	/**
