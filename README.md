@@ -7,8 +7,7 @@
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Errors/master.svg)](https://coveralls.io/r/ICanBoogie/Errors)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/errors.svg)](https://packagist.org/packages/icanboogie/errors)
 
-A library to collect errors.
-
+Collects formatted errors.
 
 
 
@@ -18,31 +17,35 @@ A library to collect errors.
 ```php
 <?php
 
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 
-$e = new Errors();
+$errors = new ErrorCollection;
 
-var_dump($e['password']);
+var_dump($errors['password']);
 // null
 
-$e['password'] = 'Invalid password';
-var_dump($e['password']);
-// 'Invalid password'
+$errors->add('password');
+var_dump($errors['password']);
+// [ Error{ format: '', params: [] } ]
 
-$e['password'] = 'Ugly password';
-var_dump($e['password']);
+$errors->add('password', 'Invalid password: {value}', [ 'value' => "123" ]);
+var_dump($errors['password']);
+// 'Invalid password: 123'
+
+$errors['password'] = 'Ugly password';
+var_dump($errors['password']);
 // array('Invalid password', 'Ugly password')
 
-$e[] = 'General error.';
-count($e)
+$errors->add_generic('General error');
+count($errors);
 // 3
 
-$e->each(function($name, $message) {
+$errors->each(function($name, $message) {
 
     echo "$name: $message\n";
 
 });
-// :General error.
+// General error
 // password: Invalid password
 // password: Ugly password
 ```
@@ -125,5 +128,5 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[documentation]:               http://api.icanboogie.org/errors/1.0/
+[documentation]:               https://icanboogie.org/api/errors/2.0/
 [ICanBoogie]:                  https://github.com/ICanBoogie/ICanBoogie
