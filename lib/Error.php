@@ -22,12 +22,12 @@ class Error implements \JsonSerializable
 	/**
 	 * @var string
 	 */
-	public $format;
+	private $format;
 
 	/**
 	 * @var array
 	 */
-	public $args;
+	private $args;
 
 	/**
 	 * @param string $format
@@ -37,6 +37,22 @@ class Error implements \JsonSerializable
 	{
 		$this->format = $format;
 		$this->args = $args;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'format':
+				return $this->format;
+			case 'args':
+				return $this->args;
+			default:
+				throw new \LogicException("Undefined property: $name");
+		}
 	}
 
 	/**
