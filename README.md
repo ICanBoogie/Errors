@@ -129,4 +129,4 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 [documentation]:               https://icanboogie.org/api/errors/2.0/
-[ICanBoogie]:                  https://github.com/ICanBoogie/ICanBoogie
+[ICanBoogie]:                  https://icanboogie.org/
