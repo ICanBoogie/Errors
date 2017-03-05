@@ -14,7 +14,7 @@ namespace ICanBoogie;
 /**
  * An interface for a callable used to render errors.
  */
-interface RenderError
+interface ErrorRenderer
 {
 	/**
 	 * Renders an error into a string.

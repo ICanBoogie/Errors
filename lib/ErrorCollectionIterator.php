@@ -22,13 +22,13 @@ class ErrorCollectionIterator implements \IteratorAggregate
 	private $collection;
 
 	/**
-	 * @var callable|RenderError
+	 * @var callable|ErrorRenderer
 	 */
 	private $render_error;
 
 	/**
 	 * @param ErrorCollection $collection
-	 * @param RenderError|callable $render_error
+	 * @param ErrorRenderer|callable $render_error
 	 */
 	public function __construct(ErrorCollection $collection, callable $render_error = null)
 	{
