@@ -69,6 +69,33 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($error, reset($errors));
 	}
 
+	public function test_add_with_exception()
+	{
+		$error = new \Exception;
+		$attribute = uniqid();
+		$this->errors->add($attribute, $error, [ uniqid() => uniqid() ]);
+		$this->assertEquals(1, $this->errors->count());
+
+		$errors = $this->errors[$attribute];
+		$this->assertInternalType('array', $errors);
+		$this->assertSame((string) $error, reset($errors)->format);
+	}
+
+	/**
+	 * @requires PHP 7.0
+	 */
+	public function test_add_with_throwable()
+	{
+		$error = new \Error;
+		$attribute = uniqid();
+		$this->errors->add($attribute, $error, [ uniqid() => uniqid() ]);
+		$this->assertEquals(1, $this->errors->count());
+
+		$errors = $this->errors[$attribute];
+		$this->assertInternalType('array', $errors);
+		$this->assertSame((string) $error, reset($errors)->format);
+	}
+
 	/**
 	 * @dataProvider provide_test_add_with_invalid_attribute
 	 * @expectedException \InvalidArgumentException

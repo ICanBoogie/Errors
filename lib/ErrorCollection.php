@@ -92,7 +92,13 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	{
 		if ($error_or_format_or_true === true
 		|| is_string($error_or_format_or_true)
-		|| $error_or_format_or_true instanceof Error) {
+		|| $error_or_format_or_true instanceof Error
+		|| $error_or_format_or_true instanceof \Exception) {
+			return;
+		}
+
+		if (PHP_VERSION_ID >= 70000 && $error_or_format_or_true instanceof \Throwable)
+		{
 			return;
 		}
 
@@ -119,7 +125,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 
 		if (!$error instanceof Error)
 		{
-			$error = new Error($error === true ? "" : $error, $args);
+			$error = new Error($error === true ? "" : (string) $error, $args);
 		}
 
 		return $error;
