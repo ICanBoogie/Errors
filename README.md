@@ -73,13 +73,10 @@ The project is continuously tested by [GitHub actions](https://github.com/ICanBo
 
 
 
-## Documentation
+## Code of Conduct
 
-The package is documented as part of the [ICanBoogie][] framework
-[documentation][]. You can generate the documentation for the package and its dependencies with
-the `make doc` command. The documentation is generated in the `build/docs` directory.
-[ApiGen](http://apigen.org/) is required. The directory can later be cleaned with
-the `make clean` command.
+This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project and its
+community, you are expected to uphold this code.
 
 
 
