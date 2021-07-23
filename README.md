@@ -83,11 +83,9 @@ the `make clean` command.
 
 
 
-## Testing
+## Contributing
 
-We provide a Docker container for local development. Run `make test-container` to create a new session. Inside the
-container run `make test` to run the test suite. Alternatively, run `make test-coverage` for a breakdown of the code
-coverage. The coverage report is available in `build/coverage/index.html`.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 
