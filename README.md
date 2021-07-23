@@ -11,8 +11,15 @@ Collects formatted errors.
 
 
 
+## Installation
 
-### Usage
+```bash
+composer require icanboogie/errors
+```
+
+
+
+## Usage
 
 ```php
 <?php
@@ -58,39 +65,6 @@ $errors->each(function($name, $message) {
 
 
 
-
-
-## Requirements
-
-The package requires PHP 5.5 or later.
-
-
-
-
-
-## Installation
-
-The recommended way to install this package is through [Composer](http://getcomposer.org/):
-
-```
-$ composer require icanboogie/errors
-```
-
-
-
-
-
-### Cloning the repository
-
-The package is [available on GitHub](https://github.com/ICanBoogie/Errors), its repository can
-be cloned with the following command line:
-
-	$ git clone https://github.com/ICanBoogie/Errors.git
-
-
-
-
-
 ## Documentation
 
 The package is documented as part of the [ICanBoogie][] framework
@@ -98,8 +72,6 @@ The package is documented as part of the [ICanBoogie][] framework
 the `make doc` command. The documentation is generated in the `build/docs` directory.
 [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with
 the `make clean` command.
-
-
 
 
 
@@ -118,13 +90,9 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-
-
 ## License
 
-**icanboogie/errors** is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
-
-
+**icanboogie/errors** is released under the [BSD-3-Clause](LICENSE).
 
 
 
