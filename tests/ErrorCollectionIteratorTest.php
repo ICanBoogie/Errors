@@ -16,12 +16,9 @@ use ICanBoogie\ErrorCollection;
 use ICanBoogie\ErrorCollectionIterator;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group render
- */
 final class ErrorCollectionIteratorTest extends TestCase
 {
-    public function test_renderer()
+    public function test_renderer(): void
     {
         $format = "error: {arg}";
         $arg1 = uniqid();
@@ -53,7 +50,7 @@ final class ErrorCollectionIteratorTest extends TestCase
         ], $rendered);
     }
 
-    public function test_render_with_customer_error_renderer()
+    public function test_render_with_customer_error_renderer(): void
     {
         $format = "error: {arg}";
         $arg1 = uniqid();

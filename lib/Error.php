@@ -12,6 +12,7 @@
 namespace ICanBoogie;
 
 use JsonSerializable;
+use LogicException;
 
 /**
  * Representation of an error.
@@ -22,50 +23,30 @@ use JsonSerializable;
 class Error implements JsonSerializable
 {
     /**
-     * @var string
+     * @param array<int|string, mixed> $args
      */
-    private $format;
-
-    /**
-     * @var array
-     */
-    private $args;
-
-    /**
-     * @param string $format
-     * @param array $args
-     */
-    public function __construct($format, array $args = [])
-    {
-        $this->format = $format;
-        $this->args = $args;
+    public function __construct(
+        private string $format,
+        private array $args = []
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function __get($name)
+    public function __get(string $name): mixed
     {
-        switch ($name) {
-            case 'format':
-                return $this->format;
-            case 'args':
-                return $this->args;
-            default:
-                throw new \LogicException("Undefined property: $name");
-        }
+        return match ($name) {
+            'format' => $this->format,
+            'args' => $this->args,
+            default => throw new LogicException("Undefined property: $name"),
+        };
     }
 
-    /**
-     * @inheritdoc
-     */
     public function __toString()
     {
         return format($this->format, $this->args);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function jsonSerialize()
     {

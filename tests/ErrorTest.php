@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Test\ICanBoogie;
+namespace Tests\ICanBoogie;
 
 use ICanBoogie\Error;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group unit
- */
-class ErrorTest extends TestCase
+final class ErrorTest extends TestCase
 {
-    public function test_getters()
+    public function test_getters(): void
     {
         $format = uniqid();
         $args = [ uniqid() => uniqid() ];
@@ -29,10 +27,10 @@ class ErrorTest extends TestCase
         $this->assertSame($args, $error->args);
     }
 
-    public function test_should_throw_exception_on_getting_undefined_property()
+    public function test_should_throw_exception_on_getting_undefined_property(): void
     {
-        $this->expectException(\LogicException::class);
         $error = new Error("");
-        $error->{uniqid()};
+        $this->expectException(LogicException::class);
+        echo $error->{uniqid()};
     }
 }

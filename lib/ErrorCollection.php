@@ -11,12 +11,22 @@
 
 namespace ICanBoogie;
 
+use ArrayAccess;
+use Countable;
+use InvalidArgumentException;
+use IteratorAggregate;
+use JsonSerializable;
 use Throwable;
+
+use function get_debug_type;
 
 /**
  * An error collection.
+ *
+ * @implements ArrayAccess<string, Error[]>
+ * @implements IteratorAggregate<string, Error>
  */
-class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \JsonSerializable, ToArray
+class ErrorCollection implements ArrayAccess, IteratorAggregate, Countable, JsonSerializable, ToArray
 {
     /**
      * Special identifier used when an error is not associated with a specific attribute.
@@ -24,24 +34,26 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
     public const GENERIC = '__generic__';
 
     /**
-     * @var Error[][]
+     * @var array<string, Error[]>
      */
-    private $collection = [];
+    private array $collection = [];
 
     /**
      * Add an error associated with an attribute.
      *
      * @param string $attribute Attribute name.
-     * @param Error|string|bool $error_or_format_or_true A {@link Error} instance or
+     * @param Throwable|bool|string|Error $error_or_format_or_true A {@link Error} instance or
      * a format to create that instance, or `true`.
-     * @param array $args Only used if `$error_or_format_or_true` is not a {@link Error}
+     * @param array<int|string, mixed> $args Only used if `$error_or_format_or_true` is not a {@link Error}
      * instance or `true`.
      *
      * @return $this
      */
-    public function add($attribute, $error_or_format_or_true = true, array $args = [])
-    {
-        $this->assert_valid_attribute($attribute);
+    public function add(
+        string $attribute,
+        Throwable|bool|string|Error $error_or_format_or_true = true,
+        array $args = []
+    ): static {
         $this->assert_valid_error($error_or_format_or_true);
 
         $this->collection[$attribute][] = $this
@@ -53,36 +65,18 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
     /**
      * Add an error not associated with any attribute.
      *
-     * @param Error|string|bool $error_or_format_or_true A {@link Error} instance or
+     * @param Throwable|bool|string|Error $error_or_format_or_true A {@link Error} instance or
      * a format to create that instance, or `true`.
-     * @param array $args Only used if `$error_or_format_or_true` is not a {@link Error}
+     * @param array<int|string, mixed> $args Only used if `$error_or_format_or_true` is not a {@link Error}
      * instance or `true`.
      *
      * @return $this
      */
-    public function add_generic($error_or_format_or_true = true, array $args = [])
-    {
+    public function add_generic(
+        Throwable|bool|string|Error $error_or_format_or_true = true,
+        array $args = []
+    ): static {
         return $this->add(self::GENERIC, $error_or_format_or_true, $args);
-    }
-
-    /**
-     * Asserts that an attribute is valid.
-     *
-     * @param string $attribute
-     */
-    protected function assert_valid_attribute($attribute)
-    {
-        if (is_string($attribute)) {
-            return;
-        }
-
-        throw new \InvalidArgumentException(sprintf(
-            "\$attribute must a string. Given: `%s`",
-            Error::class,
-            is_object($attribute)
-                ? get_class($attribute)
-                : gettype($attribute)
-        ));
     }
 
     /**
@@ -90,7 +84,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
      *
      * @param mixed $error_or_format_or_true
      */
-    protected function assert_valid_error($error_or_format_or_true)
+    private function assert_valid_error(mixed $error_or_format_or_true): void
     {
         if (
             $error_or_format_or_true === true
@@ -101,25 +95,23 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
             return;
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(sprintf(
             "\$error_or_format_or_true must be a an instance of `%s`, a string, or true. Given: `%s`",
             Error::class,
-            is_object($error_or_format_or_true)
-                ? get_class($error_or_format_or_true)
-                : gettype($error_or_format_or_true)
+            get_debug_type($error_or_format_or_true)
         ));
     }
 
     /**
      * Ensures a {@link Error} instance.
      *
-     * @param Error|string|bool $error_or_format_or_true
-     * @param array $args
-     *
-     * @return Error
+     * @param Throwable|bool|string|Error $error_or_format_or_true
+     * @param array<int|string, mixed> $args
      */
-    protected function ensure_error_instance($error_or_format_or_true, array $args = [])
-    {
+    private function ensure_error_instance(
+        Throwable|bool|string|Error $error_or_format_or_true,
+        array $args = []
+    ): Error {
         $error = $error_or_format_or_true;
 
         if (!$error instanceof Error) {
@@ -132,24 +124,26 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
     /**
      * Adds an error.
      *
-     * @param string $attribute
-     * @param Error|string|true $error
+     * @param string|null $offset An attribute name or `null` for _generic_.
+     * @param Throwable|Error|string|bool $value An error.
      *
      * @see add()
+     *
+     * @phpstan-ignore-next-line
      */
-    public function offsetSet($attribute, $error)
+    public function offsetSet($offset, $value): void
     {
-        $this->add($attribute === null ? self::GENERIC : $attribute, $error);
+        $this->add($offset ?? self::GENERIC, $value);
     }
 
     /**
      * Clears the errors of an attribute.
      *
-     * @param string|null $attribute Attribute name or `null` for _generic_.
+     * @param string|null $offset An attribute name or `null` for _generic_.
      */
-    public function offsetUnset($attribute)
+    public function offsetUnset($offset): void
     {
-        unset($this->collection[$attribute === null ? self::GENERIC : $attribute]);
+        unset($this->collection[$offset ?? self::GENERIC]);
     }
 
     /**
@@ -168,13 +162,11 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
      * // true
      * ```
      *
-     * @param string|null $attribute Attribute name or `null` for _generic_.
-     *
-     * @return boolean true if an error is defined for the specified attribute, false otherwise.
+     * @param string|null $offset An attribute name or `null` for _generic_.
      */
-    public function offsetExists($attribute)
+    public function offsetExists($offset): bool
     {
-        return isset($this->collection[$attribute === null ? self::GENERIC : $attribute]);
+        return isset($this->collection[$offset ?? self::GENERIC]);
     }
 
     /**
@@ -192,17 +184,17 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
      * // [ Message ]
      * ```
      *
-     * @param string|null $attribute Attribute name or `null` for _generic_.
+     * @param string|null $offset An attribute name or `null` for _generic_.
      *
      * @return Error[]
      */
-    public function offsetGet($attribute)
+    public function offsetGet($offset): array
     {
-        if (!$this->offsetExists($attribute)) {
+        if (!$this->offsetExists($offset)) {
             return [];
         }
 
-        return $this->collection[$attribute === null ? self::GENERIC : $attribute];
+        return $this->collection[$offset ?? self::GENERIC];
     }
 
     /**
@@ -210,7 +202,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
      *
      * @return $this
      */
-    public function clear()
+    public function clear(): static
     {
         $this->collection = [];
 
@@ -219,10 +211,8 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 
     /**
      * Merges with another error collection.
-     *
-     * @param ErrorCollection $collection
      */
-    public function merge(ErrorCollection $collection)
+    public function merge(ErrorCollection $collection): void
     {
         foreach ($collection as $attribute => $error) {
             $this->add($attribute, $error);
@@ -230,9 +220,9 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
     }
 
     /**
-     * @inheritdoc
+     * @return iterable<string, Error>
      */
-    public function getIterator()
+    public function getIterator(): iterable
     {
         foreach ($this->to_array() as $attribute => $errors) {
             foreach ($errors as $error) {
@@ -255,18 +245,19 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
      *
      * $errors->each(function ($error, $attribute, $errors) {
      *
-     *     echo "$attribute => $error<br />";
+     *     echo "$attribute => $error\n";
      *
      * });
-     * </pre>
+     * ```
      *
-     * @param callable $callback Function to execute for each element, taking three arguments:
+     * @param callable(Error, string $attribute, ErrorCollection): void $callback
+     *     Function to execute for each element, taking three arguments:
      *
-     * - `Error $error`: The current error.
-     * - `string $attribute`: The attribute or {@link self::GENERIC}.
-     * - `ErrorCollection $collection`: This instance.
+     *     - `Error $error`: The current error.
+     *     - `string $attribute`: The attribute or {@link self::GENERIC}.
+     *     - `ErrorCollection $collection`: This instance.
      */
-    public function each(callable $callback)
+    public function each(callable $callback): void
     {
         foreach ($this as $attribute => $error) {
             $callback($error, $attribute, $this);
@@ -276,9 +267,9 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
     /**
      * Returns the total number of errors.
      *
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function count()
+    public function count(): int
     {
         return count($this->collection, COUNT_RECURSIVE) - count($this->collection);
     }
@@ -294,7 +285,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
     /**
      * Converts the object into an array.
      *
-     * @return Error[][]
+     * @return array<string, Error[]>
      */
     public function to_array(): array
     {

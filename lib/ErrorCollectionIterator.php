@@ -11,40 +11,37 @@
 
 namespace ICanBoogie;
 
+use IteratorAggregate;
+
 /**
  * Iterates over an error collection and return rendered errors.
+ *
+ * @implements IteratorAggregate<string, string>
  */
-class ErrorCollectionIterator implements \IteratorAggregate
+class ErrorCollectionIterator implements IteratorAggregate
 {
-    /**
-     * @var ErrorCollection
-     */
-    private $collection;
 
     /**
-     * @var callable|ErrorRenderer
+     * @var ErrorRenderer|callable
+     * @phpstan-var ErrorRenderer|(callable(Error,string $attribute,ErrorCollection):string)
      */
     private $render_error;
 
     /**
-     * @param ErrorCollection $collection
-     * @param ErrorRenderer|callable $render_error
+     * @phpstan-param ErrorRenderer|(callable(Error,string $attribute,ErrorCollection):string)|null $render_error
      */
-    public function __construct(ErrorCollection $collection, callable $render_error = null)
-    {
-        $this->collection = $collection;
-        $this->render_error = $render_error ?: function (Error $error) {
-            return (string) $error;
-        };
+    public function __construct(
+        private ErrorCollection $collection,
+        ErrorRenderer|callable $render_error = null
+    ) {
+        $this->render_error = $render_error ?? fn(Error $error) => (string) $error;
     }
 
     /**
-     * @inheritdoc
+     * @return iterable<string, string>
      */
-    public function getIterator()
+    public function getIterator(): iterable
     {
-        /* @var $error Error */
-
         foreach ($this->collection as $attribute => $error) {
             yield $attribute => $this->render_error($error, $attribute);
         }
@@ -52,16 +49,9 @@ class ErrorCollectionIterator implements \IteratorAggregate
 
     /**
      * Renders an error into a string.
-     *
-     * @param Error $error
-     * @param string $attribute
-     *
-     * @return string
      */
-    protected function render_error(Error $error, $attribute)
+    private function render_error(Error $error, string $attribute): string
     {
-        $render_error = $this->render_error;
-
-        return $render_error($error, $attribute, $this->collection);
+        return ($this->render_error)($error, $attribute, $this->collection);
     }
 }

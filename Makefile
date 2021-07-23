@@ -45,6 +45,7 @@ doc: vendor
 .PHONY: lint
 lint:
 	@phpcs
+	@vendor/bin/phpstan
 
 .PHONY: clean
 clean:

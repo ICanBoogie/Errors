@@ -11,27 +11,24 @@
 
 namespace Tests\ICanBoogie;
 
+use Exception;
 use ICanBoogie\Error;
 use ICanBoogie\ErrorCollection;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group error
- */
-class ErrorCollectionTest extends TestCase
+use function assert;
+use function reset;
+
+final class ErrorCollectionTest extends TestCase
 {
-    /**
-     * @var ErrorCollection
-     */
-    private $errors;
+    private ErrorCollection $errors;
 
     protected function setUp(): void
     {
         $this->errors = new ErrorCollection();
     }
 
-    public function test_add_with_string()
+    public function test_add_with_string(): void
     {
         $attribute = uniqid();
         $format = uniqid();
@@ -42,12 +39,14 @@ class ErrorCollectionTest extends TestCase
         $errors = $this->errors[$attribute];
         $this->assertIsArray($errors);
         $error = reset($errors);
-        $this->assertInstanceOf(Error::class, $error);
+
+        assert($error instanceof Error);
+
         $this->assertSame($format, $error->format);
         $this->assertSame($args, $error->args);
     }
 
-    public function test_add_with_true()
+    public function test_add_with_true(): void
     {
         $attribute = uniqid();
         $args = [ uniqid() => uniqid() ];
@@ -57,12 +56,14 @@ class ErrorCollectionTest extends TestCase
         $errors = $this->errors[$attribute];
         $this->assertIsArray($errors);
         $error = reset($errors);
-        $this->assertInstanceOf(Error::class, $error);
+
+        assert($error instanceof Error);
+
         $this->assertSame("", $error->format);
         $this->assertSame($args, $error->args);
     }
 
-    public function test_add_with_error()
+    public function test_add_with_error(): void
     {
         $error = new Error(uniqid(), [ uniqid() => uniqid() ]);
         $attribute = uniqid();
@@ -74,19 +75,21 @@ class ErrorCollectionTest extends TestCase
         $this->assertSame($error, reset($errors));
     }
 
-    public function test_add_with_exception()
+    public function test_add_with_exception(): void
     {
-        $error = new \Exception();
+        $error = new Exception();
         $attribute = uniqid();
         $this->errors->add($attribute, $error, [ uniqid() => uniqid() ]);
         $this->assertEquals(1, $this->errors->count());
 
         $errors = $this->errors[$attribute];
         $this->assertIsArray($errors);
-        $this->assertSame((string) $error, reset($errors)->format);
+        $first = reset($errors);
+        assert($first instanceof Error);
+        $this->assertSame((string) $error, $first->format);
     }
 
-    public function test_add_with_throwable()
+    public function test_add_with_throwable(): void
     {
         $error = new \Error();
         $attribute = uniqid();
@@ -95,59 +98,12 @@ class ErrorCollectionTest extends TestCase
 
         $errors = $this->errors[$attribute];
         $this->assertIsArray($errors);
-        $this->assertSame((string) $error, reset($errors)->format);
+        $first = reset($errors);
+        assert($first instanceof Error);
+        $this->assertSame((string) $error, $first->format);
     }
 
-    /**
-     * @dataProvider provide_test_add_with_invalid_attribute
-     *
-     *
-     * @param mixed $attribute
-     */
-    public function test_add_with_invalid_attribute($attribute)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->errors->add($attribute, "Error");
-    }
-
-    public function provide_test_add_with_invalid_attribute()
-    {
-        return [
-
-            [ null ],
-            [ false ],
-            [ true ],
-            [ 123 ],
-            [ [] ],
-            [ new \stdClass() ]
-
-        ];
-    }
-
-    /**
-     * @dataProvider provide_test_add_with_invalid_type
-     *
-     * @param mixed $error
-     */
-    public function test_add_with_invalid_type($error)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->errors->add(uniqid(), $error);
-    }
-
-    public function provide_test_add_with_invalid_type()
-    {
-        return [
-
-            [ false ],
-            [ [ uniqid() => uniqid() ] ],
-            [ 1234 ],
-            [ new \stdClass() ]
-
-        ];
-    }
-
-    public function test_add_generic()
+    public function test_add_generic(): void
     {
         $error = new Error(uniqid(), [ uniqid() => uniqid() ]);
         $this->errors->add_generic($error);
@@ -155,7 +111,7 @@ class ErrorCollectionTest extends TestCase
         $this->assertSame($error, reset($errors));
     }
 
-    public function test_array_access_interface()
+    public function test_array_access_interface(): void
     {
         $errors = $this->errors;
         $err1 = new Error(uniqid(), [ uniqid() => uniqid() ]);
@@ -179,7 +135,7 @@ class ErrorCollectionTest extends TestCase
         $this->assertSame([], $errors[$attribute]);
     }
 
-    public function test_iterator()
+    public function test_iterator(): void
     {
         $errors = $this->errors;
         $err1 = new Error('err1-' . uniqid());
@@ -208,7 +164,7 @@ class ErrorCollectionTest extends TestCase
         ], $iterator_errors);
     }
 
-    public function test_each()
+    public function test_each(): void
     {
         $errors = $this->errors;
         $err1 = new Error('err1-' . uniqid());
@@ -238,14 +194,14 @@ class ErrorCollectionTest extends TestCase
         ], $iterator_errors);
     }
 
-    public function test_clear()
+    public function test_clear(): void
     {
         $errors = $this->errors->add(uniqid())->add(uniqid())->add(uniqid());
         $this->assertEquals(3, $errors->count());
         $this->assertEquals(0, $errors->clear()->count());
     }
 
-    public function test_merge()
+    public function test_merge(): void
     {
         $er1 = new Error(uniqid());
         $er2 = new Error(uniqid());
@@ -269,7 +225,7 @@ class ErrorCollectionTest extends TestCase
         ], $col1->to_array());
     }
 
-    public function test_json_serialize()
+    public function test_json_serialize(): void
     {
         $format = "error: {arg}";
         $arg1 = uniqid();
@@ -287,8 +243,8 @@ class ErrorCollectionTest extends TestCase
 
             ErrorCollection::GENERIC => [
 
-                "error: {$arg1}",
-                "error: {$arg2}",
+                "error: $arg1",
+                "error: $arg2",
 
             ],
 
