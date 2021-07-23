@@ -9,21 +9,26 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Tests\ICanBoogie;
+
+use ICanBoogie\Error;
+use ICanBoogie\ErrorCollection;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group error
  */
-class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
+class ErrorCollectionTest extends TestCase
 {
 	/**
 	 * @var ErrorCollection
 	 */
 	private $errors;
 
-	public function setUp()
+	protected function setUp(): void
 	{
-		$this->errors = new ErrorCollection;
+		$this->errors = new ErrorCollection();
 	}
 
 	public function test_add_with_string()
@@ -35,7 +40,7 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->errors->count());
 
 		$errors = $this->errors[$attribute];
-		$this->assertInternalType('array', $errors);
+		$this->assertIsArray($errors);
 		$error = reset($errors);
 		$this->assertInstanceOf(Error::class, $error);
 		$this->assertSame($format, $error->format);
@@ -50,7 +55,7 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->errors->count());
 
 		$errors = $this->errors[$attribute];
-		$this->assertInternalType('array', $errors);
+		$this->assertIsArray($errors);
 		$error = reset($errors);
 		$this->assertInstanceOf(Error::class, $error);
 		$this->assertSame("", $error->format);
@@ -65,45 +70,43 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->errors->count());
 
 		$errors = $this->errors[$attribute];
-		$this->assertInternalType('array', $errors);
+		$this->assertIsArray($errors);
 		$this->assertSame($error, reset($errors));
 	}
 
 	public function test_add_with_exception()
 	{
-		$error = new \Exception;
+		$error = new \Exception();
 		$attribute = uniqid();
 		$this->errors->add($attribute, $error, [ uniqid() => uniqid() ]);
 		$this->assertEquals(1, $this->errors->count());
 
 		$errors = $this->errors[$attribute];
-		$this->assertInternalType('array', $errors);
+		$this->assertIsArray($errors);
 		$this->assertSame((string) $error, reset($errors)->format);
 	}
 
-	/**
-	 * @requires PHP 7.0
-	 */
 	public function test_add_with_throwable()
 	{
-		$error = new \Error;
+		$error = new \Error();
 		$attribute = uniqid();
 		$this->errors->add($attribute, $error, [ uniqid() => uniqid() ]);
 		$this->assertEquals(1, $this->errors->count());
 
 		$errors = $this->errors[$attribute];
-		$this->assertInternalType('array', $errors);
+		$this->assertIsArray($errors);
 		$this->assertSame((string) $error, reset($errors)->format);
 	}
 
 	/**
 	 * @dataProvider provide_test_add_with_invalid_attribute
-	 * @expectedException \InvalidArgumentException
+	 *
 	 *
 	 * @param mixed $attribute
 	 */
 	public function test_add_with_invalid_attribute($attribute)
 	{
+		$this->expectException(InvalidArgumentException::class);
 		$this->errors->add($attribute, "Error");
 	}
 
@@ -116,19 +119,19 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 			[ true ],
 			[ 123 ],
 			[ [] ],
-			[ new \stdClass ]
+			[ new \stdClass() ]
 
 		];
 	}
 
 	/**
 	 * @dataProvider provide_test_add_with_invalid_type
-	 * @expectedException \InvalidArgumentException
 	 *
 	 * @param mixed $error
 	 */
 	public function test_add_with_invalid_type($error)
 	{
+		$this->expectException(InvalidArgumentException::class);
 		$this->errors->add(uniqid(), $error);
 	}
 
@@ -139,7 +142,7 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 			[ false ],
 			[ [ uniqid() => uniqid() ] ],
 			[ 1234 ],
-			[ new \stdClass ]
+			[ new \stdClass() ]
 
 		];
 	}
@@ -250,9 +253,9 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 		$er1 = new Error(uniqid());
 		$er2 = new Error(uniqid());
 
-		$col1 = (new ErrorCollection)
+		$col1 = (new ErrorCollection())
 			->add_generic($er1);
-		$col2 = (new ErrorCollection)
+		$col2 = (new ErrorCollection())
 			->add_generic($er2);
 
 		$col1->merge($col2);
@@ -293,8 +296,8 @@ class ErrorCollectionTest extends \PHPUnit_Framework_TestCase
 
 			$attribute => [
 
-				"error: {$arg3}",
-				"error: {$arg4}",
+				"error: $arg3",
+				"error: $arg4",
 
 			]
 

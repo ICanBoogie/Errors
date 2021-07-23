@@ -303,7 +303,7 @@ class ErrorCollection implements \ArrayAccess, \IteratorAggregate, \Countable, \
 	 *
 	 * @return Error[][]
 	 */
-	public function to_array()
+	public function to_array(): array
 	{
 		return array_filter(array_merge([ self::GENERIC => [] ], $this->collection));
 	}

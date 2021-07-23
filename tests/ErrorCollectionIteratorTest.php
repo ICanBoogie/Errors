@@ -9,12 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Tests\ICanBoogie;
+
+use ICanBoogie\Error;
+use ICanBoogie\ErrorCollection;
+use ICanBoogie\ErrorCollectionIterator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group render
  */
-class ErrorCollectionIteratorTest extends \PHPUnit_Framework_TestCase
+final class ErrorCollectionIteratorTest extends TestCase
 {
 	public function test_renderer()
 	{
@@ -25,7 +30,7 @@ class ErrorCollectionIteratorTest extends \PHPUnit_Framework_TestCase
 		$arg4 = uniqid();
 		$attribute = uniqid();
 
-		$errors = (new ErrorCollection)
+		$errors = (new ErrorCollection())
 			->add($attribute, $format, [ 'arg' => $arg3 ])
 			->add_generic($format, [ 'arg' => $arg1 ])
 			->add($attribute, $format, [ 'arg' => $arg4 ])
@@ -42,10 +47,10 @@ class ErrorCollectionIteratorTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame([
 
-			[ ErrorCollection::GENERIC, "error: {$arg1}" ],
-			[ ErrorCollection::GENERIC, "error: {$arg2}" ],
-			[ $attribute, "error: {$arg3}" ],
-			[ $attribute, "error: {$arg4}" ],
+			[ ErrorCollection::GENERIC, "error: $arg1" ],
+			[ ErrorCollection::GENERIC, "error: $arg2" ],
+			[ $attribute, "error: $arg3" ],
+			[ $attribute, "error: $arg4" ],
 
 		], $rendered);
 	}
@@ -59,7 +64,7 @@ class ErrorCollectionIteratorTest extends \PHPUnit_Framework_TestCase
 		$arg4 = uniqid();
 		$attribute = uniqid();
 
-		$errors = (new ErrorCollection)
+		$errors = (new ErrorCollection())
 			->add($attribute, $format, [ 'arg' => $arg3 ])
 			->add_generic($format, [ 'arg' => $arg1 ])
 			->add($attribute, $format, [ 'arg' => $arg4 ])
@@ -83,10 +88,10 @@ class ErrorCollectionIteratorTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame([
 
-			[ ErrorCollection::GENERIC, strrev("error: {$arg1}") ],
-			[ ErrorCollection::GENERIC, strrev("error: {$arg2}") ],
-			[ $attribute, strrev("error: {$arg3}") ],
-			[ $attribute, strrev("error: {$arg4}") ],
+			[ ErrorCollection::GENERIC, strrev("error: $arg1") ],
+			[ ErrorCollection::GENERIC, strrev("error: $arg2") ],
+			[ $attribute, strrev("error: $arg3") ],
+			[ $attribute, strrev("error: $arg4") ],
 
 		], $rendered);
 	}
