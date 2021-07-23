@@ -1,8 +1,6 @@
 # Errors
 
 [![Release](https://img.shields.io/packagist/v/icanboogie/errors.svg)](https://packagist.org/packages/icanboogie/errors)
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Errors/master.svg)](http://travis-ci.org/ICanBoogie/Errors)
-[![HHVM](https://img.shields.io/hhvm/icanboogie/errors.svg)](http://hhvm.h4cc.de/package/icanboogie/errors)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Errors/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Errors)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Errors/master.svg)](https://coveralls.io/r/ICanBoogie/Errors)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/errors.svg)](https://packagist.org/packages/icanboogie/errors)
@@ -65,6 +63,14 @@ $errors->each(function($name, $message) {
 
 
 
+## Continuous Integration
+
+The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Erorrs/actions).
+
+[![Tests](https://github.com/ICanBoogie/Erorrs/workflows/test/badge.svg?branch=master)](https://github.com/ICanBoogie/Erorrs/actions?query=workflow%3Atest)
+
+
+
 ## Documentation
 
 The package is documented as part of the [ICanBoogie][] framework
@@ -81,11 +87,6 @@ We provide a Docker container for local development. Run `make test-container` t
 container run `make test` to run the test suite. Alternatively, run `make test-coverage` for a breakdown of the code
 coverage. The coverage report is available in `build/coverage/index.html`.
 
-The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
-
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Errors/master.svg)](https://travis-ci.org/ICanBoogie/Errors)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Errors/master.svg)](https://coveralls.io/r/ICanBoogie/Errors)
-
 
 
 ## License
@@ -94,5 +95,5 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[documentation]:               https://icanboogie.org/api/errors/2.0/
+[documentation]:               https://icanboogie.org/api/errors/latest/
 [ICanBoogie]:                  https://icanboogie.org/
