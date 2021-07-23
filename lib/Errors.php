@@ -20,8 +20,8 @@ namespace ICanBoogie;
  */
 class Errors extends ErrorCollection
 {
-	/**
-	 * @deprecated
-	 */
-	static public $message_constructor;
+    /**
+     * @deprecated
+     */
+    public static $message_constructor;
 }

@@ -68,6 +68,7 @@ $errors->each(function($name, $message) {
 The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Erorrs/actions).
 
 [![Tests](https://github.com/ICanBoogie/Erorrs/workflows/test/badge.svg?branch=master)](https://github.com/ICanBoogie/Erorrs/actions?query=workflow%3Atest)
+[![Code Style](https://github.com/ICanBoogie/Erorrs/workflows/code-style/badge.svg?branch=master)](https://github.com/ICanBoogie/Erorrs/actions?query=workflow%3Acode-style)
 
 
 

@@ -42,6 +42,10 @@ doc: vendor
 	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
 	--template-theme "bootstrap"
 
+.PHONY: lint
+lint:
+	@phpcs
+
 .PHONY: clean
 clean:
 	@rm -fR build

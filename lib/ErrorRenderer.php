@@ -16,14 +16,14 @@ namespace ICanBoogie;
  */
 interface ErrorRenderer
 {
-	/**
-	 * Renders an error into a string.
-	 *
-	 * @param Error $error
-	 * @param string $attribute
-	 * @param ErrorCollection $collection
-	 *
-	 * @return string
-	 */
-	public function __invoke(Error $error, $attribute, ErrorCollection $collection);
+    /**
+     * Renders an error into a string.
+     *
+     * @param Error $error
+     * @param string $attribute
+     * @param ErrorCollection $collection
+     *
+     * @return string
+     */
+    public function __invoke(Error $error, $attribute, ErrorCollection $collection);
 }

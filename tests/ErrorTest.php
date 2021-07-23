@@ -19,20 +19,20 @@ use PHPUnit\Framework\TestCase;
  */
 class ErrorTest extends TestCase
 {
-	public function test_getters()
-	{
-		$format = uniqid();
-		$args = [ uniqid() => uniqid() ];
-		$error = new Error($format, $args);
+    public function test_getters()
+    {
+        $format = uniqid();
+        $args = [ uniqid() => uniqid() ];
+        $error = new Error($format, $args);
 
-		$this->assertSame($format, $error->format);
-		$this->assertSame($args, $error->args);
-	}
+        $this->assertSame($format, $error->format);
+        $this->assertSame($args, $error->args);
+    }
 
-	public function test_should_throw_exception_on_getting_undefined_property()
-	{
-		$this->expectException(\LogicException::class);
-		$error = new Error("");
-		$error->{ uniqid() };
-	}
+    public function test_should_throw_exception_on_getting_undefined_property()
+    {
+        $this->expectException(\LogicException::class);
+        $error = new Error("");
+        $error->{uniqid()};
+    }
 }

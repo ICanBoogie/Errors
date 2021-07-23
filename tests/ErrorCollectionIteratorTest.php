@@ -21,78 +21,76 @@ use PHPUnit\Framework\TestCase;
  */
 final class ErrorCollectionIteratorTest extends TestCase
 {
-	public function test_renderer()
-	{
-		$format = "error: {arg}";
-		$arg1 = uniqid();
-		$arg2 = uniqid();
-		$arg3 = uniqid();
-		$arg4 = uniqid();
-		$attribute = uniqid();
+    public function test_renderer()
+    {
+        $format = "error: {arg}";
+        $arg1 = uniqid();
+        $arg2 = uniqid();
+        $arg3 = uniqid();
+        $arg4 = uniqid();
+        $attribute = uniqid();
 
-		$errors = (new ErrorCollection())
-			->add($attribute, $format, [ 'arg' => $arg3 ])
-			->add_generic($format, [ 'arg' => $arg1 ])
-			->add($attribute, $format, [ 'arg' => $arg4 ])
-			->add_generic($format, [ 'arg' => $arg2 ])
-		;
+        $errors = (new ErrorCollection())
+            ->add($attribute, $format, [ 'arg' => $arg3 ])
+            ->add_generic($format, [ 'arg' => $arg1 ])
+            ->add($attribute, $format, [ 'arg' => $arg4 ])
+            ->add_generic($format, [ 'arg' => $arg2 ]);
 
-		$renderer = new ErrorCollectionIterator($errors);
-		$rendered = [];
+        $renderer = new ErrorCollectionIterator($errors);
+        $rendered = [];
 
-		foreach ($renderer as $a => $r)
-		{
-			$rendered[] = [ $a, $r ];
-		}
+        foreach ($renderer as $a => $r) {
+            $rendered[] = [ $a, $r ];
+        }
 
-		$this->assertSame([
+        $this->assertSame([
 
-			[ ErrorCollection::GENERIC, "error: $arg1" ],
-			[ ErrorCollection::GENERIC, "error: $arg2" ],
-			[ $attribute, "error: $arg3" ],
-			[ $attribute, "error: $arg4" ],
+            [ ErrorCollection::GENERIC, "error: $arg1" ],
+            [ ErrorCollection::GENERIC, "error: $arg2" ],
+            [ $attribute, "error: $arg3" ],
+            [ $attribute, "error: $arg4" ],
 
-		], $rendered);
-	}
+        ], $rendered);
+    }
 
-	public function test_render_with_customer_error_renderer()
-	{
-		$format = "error: {arg}";
-		$arg1 = uniqid();
-		$arg2 = uniqid();
-		$arg3 = uniqid();
-		$arg4 = uniqid();
-		$attribute = uniqid();
+    public function test_render_with_customer_error_renderer()
+    {
+        $format = "error: {arg}";
+        $arg1 = uniqid();
+        $arg2 = uniqid();
+        $arg3 = uniqid();
+        $arg4 = uniqid();
+        $attribute = uniqid();
 
-		$errors = (new ErrorCollection())
-			->add($attribute, $format, [ 'arg' => $arg3 ])
-			->add_generic($format, [ 'arg' => $arg1 ])
-			->add($attribute, $format, [ 'arg' => $arg4 ])
-			->add_generic($format, [ 'arg' => $arg2 ])
-		;
+        $errors = (new ErrorCollection())
+            ->add($attribute, $format, [ 'arg' => $arg3 ])
+            ->add_generic($format, [ 'arg' => $arg1 ])
+            ->add($attribute, $format, [ 'arg' => $arg4 ])
+            ->add_generic($format, [ 'arg' => $arg2 ]);
 
-		$renderer = new ErrorCollectionIterator($errors, function (Error $error, $attribute, ErrorCollection $collection) use ($errors) {
+        $renderer = new ErrorCollectionIterator($errors, function (
+            Error $error,
+            $attribute,
+            ErrorCollection $collection
+        ) use ($errors) {
+            $this->assertSame($errors, $collection);
 
-			$this->assertSame($errors, $collection);
+            return strrev($error);
+        });
 
-			return strrev($error);
+        $rendered = [];
 
-		});
+        foreach ($renderer as $a => $r) {
+            $rendered[] = [ $a, $r ];
+        }
 
-		$rendered = [];
+        $this->assertSame([
 
-		foreach ($renderer as $a => $r)
-		{
-			$rendered[] = [ $a, $r ];
-		}
+            [ ErrorCollection::GENERIC, strrev("error: $arg1") ],
+            [ ErrorCollection::GENERIC, strrev("error: $arg2") ],
+            [ $attribute, strrev("error: $arg3") ],
+            [ $attribute, strrev("error: $arg4") ],
 
-		$this->assertSame([
-
-			[ ErrorCollection::GENERIC, strrev("error: $arg1") ],
-			[ ErrorCollection::GENERIC, strrev("error: $arg2") ],
-			[ $attribute, strrev("error: $arg3") ],
-			[ $attribute, strrev("error: $arg4") ],
-
-		], $rendered);
-	}
+        ], $rendered);
+    }
 }
