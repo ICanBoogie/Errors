@@ -276,9 +276,9 @@ class ErrorCollection implements ArrayAccess, IteratorAggregate, Countable, Json
     }
 
     /**
-     * @inheritdoc
+     * @return array<string, Error[]>
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return $this->to_array();
     }

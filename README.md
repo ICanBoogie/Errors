@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/packagist/v/icanboogie/errors.svg)](https://packagist.org/packages/icanboogie/errors)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Errors/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Errors)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Errors/master.svg)](https://coveralls.io/r/ICanBoogie/Errors)
-[![Packagist](https://img.shields.io/packagist/dt/icanboogie/errors.svg)](https://packagist.org/packages/icanboogie/errors)
+[![Downloads](https://img.shields.io/packagist/dt/icanboogie/errors.svg)](https://packagist.org/packages/icanboogie/errors)
 
 Collects formatted errors.
 
@@ -65,18 +65,18 @@ $errors->each(function($name, $message) {
 
 ## Continuous Integration
 
-The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Erorrs/actions).
+The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Errors/actions).
 
-[![Tests](https://github.com/ICanBoogie/Errors/workflows/test/badge.svg?branch=master)](https://github.com/ICanBoogie/Errors/actions?query=workflow%3Atest)
-[![Static Analysis](https://github.com/ICanBoogie/Errors/workflows/static-analysis/badge.svg?branch=master)](https://github.com/ICanBoogie/Errors/actions?query=workflow%3Astatic-analysis)
-[![Code Style](https://github.com/ICanBoogie/Errors/workflows/code-style/badge.svg?branch=master)](https://github.com/ICanBoogie/Errors/actions?query=workflow%3Acode-style)
+[![Tests](https://github.com/ICanBoogie/Errors/workflows/test/badge.svg)](https://github.com/ICanBoogie/Errors/actions?query=workflow%3Atest)
+[![Static Analysis](https://github.com/ICanBoogie/Errors/workflows/static-analysis/badge.svg)](https://github.com/ICanBoogie/Errors/actions?query=workflow%3Astatic-analysis)
+[![Code Style](https://github.com/ICanBoogie/Errors/workflows/code-style/badge.svg)](https://github.com/ICanBoogie/Errors/actions?query=workflow%3Acode-style)
 
 
 
 ## Code of Conduct
 
-This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project and its
-community, you are expected to uphold this code.
+This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
+this project and its community, you are expected to uphold this code.
 
 
 

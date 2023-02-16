@@ -35,7 +35,7 @@ class Error implements JsonSerializable
     /**
      * @inheritDoc
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): string
     {
         return (string) $this;
     }

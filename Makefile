@@ -5,14 +5,17 @@ PHPUNIT = vendor/bin/phpunit
 
 # do not edit the following lines
 
+.PHONY: usage
 usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
 	@composer install
 
+# testing
+
 .PHONY: test-dependencies
-test-dependencies: vendor
+test-dependencies: vendor test-cleanup
 
 .PHONY: test
 test: test-dependencies
@@ -21,34 +24,31 @@ test: test-dependencies
 .PHONY: test-coverage
 test-coverage: test-dependencies
 	@mkdir -p build/coverage
-	@$(PHPUNIT) --coverage-html build/coverage
+	@XDEBUG_MODE=coverage $(PHPUNIT) --coverage-html build/coverage
 
 .PHONY: test-coveralls
 test-coveralls: test-dependencies
 	@mkdir -p build/logs
-	@$(PHPUNIT) --coverage-clover build/logs/clover.xml
+	@XDEBUG_MODE=coverage $(PHPUNIT) --coverage-clover build/logs/clover.xml
+
+.PHONY: test-cleanup
+test-cleanup:
+	@rm -rf tests/sandbox/*
 
 .PHONY: test-container
-test-container:
-	@-docker-compose run --rm app bash
+test-container: test-container-81
+
+.PHONY: test-container-81
+test-container-81:
+	@-docker-compose run --rm app81 bash
 	@docker-compose down -v
 
-.PHONY: doc
-doc: vendor
-	@mkdir -p build/docs
-	@apigen generate \
-	--source lib \
-	--destination build/docs/ \
-	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
-	--template-theme "bootstrap"
+.PHONY: test-container-82
+test-container-82:
+	@-docker-compose run --rm app82 bash
+	@docker-compose down -v
 
 .PHONY: lint
 lint:
-	@phpcs
-	@vendor/bin/phpstan
-
-.PHONY: clean
-clean:
-	@rm -fR build
-	@rm -fR vendor
-	@rm -f composer.lock
+	@XDEBUG_MODE=off phpcs -s
+	@XDEBUG_MODE=off vendor/bin/phpstan

@@ -21,7 +21,6 @@ use Traversable;
  */
 class ErrorCollectionIterator implements IteratorAggregate
 {
-
     /**
      * @var ErrorRenderer|callable
      * @phpstan-var ErrorRenderer|(callable(Error,string $attribute,ErrorCollection):string)
