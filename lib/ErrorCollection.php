@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use IteratorAggregate;
 use JsonSerializable;
 use Throwable;
+use Traversable;
 
 use function get_debug_type;
 
@@ -220,9 +221,9 @@ class ErrorCollection implements ArrayAccess, IteratorAggregate, Countable, Json
     }
 
     /**
-     * @return iterable<string, Error>
+     * @return Traversable<string, Error>
      */
-    public function getIterator(): iterable
+    public function getIterator(): Traversable
     {
         foreach ($this->to_array() as $attribute => $errors) {
             foreach ($errors as $error) {
@@ -277,7 +278,7 @@ class ErrorCollection implements ArrayAccess, IteratorAggregate, Countable, Json
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->to_array();
     }

@@ -12,13 +12,9 @@
 namespace ICanBoogie;
 
 use JsonSerializable;
-use LogicException;
 
 /**
  * Representation of an error.
- *
- * @property-read string $format
- * @property-read array $args
  */
 class Error implements JsonSerializable
 {
@@ -26,18 +22,9 @@ class Error implements JsonSerializable
      * @param array<int|string, mixed> $args
      */
     public function __construct(
-        private string $format,
-        private array $args = []
+        public readonly string $format,
+        public readonly array $args = []
     ) {
-    }
-
-    public function __get(string $name): mixed
-    {
-        return match ($name) {
-            'format' => $this->format,
-            'args' => $this->args,
-            default => throw new LogicException("Undefined property: $name"),
-        };
     }
 
     public function __toString()
@@ -48,7 +35,7 @@ class Error implements JsonSerializable
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return (string) $this;
     }

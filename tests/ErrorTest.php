@@ -12,7 +12,6 @@
 namespace Tests\ICanBoogie;
 
 use ICanBoogie\Error;
-use LogicException;
 use PHPUnit\Framework\TestCase;
 
 final class ErrorTest extends TestCase
@@ -25,12 +24,5 @@ final class ErrorTest extends TestCase
 
         $this->assertSame($format, $error->format);
         $this->assertSame($args, $error->args);
-    }
-
-    public function test_should_throw_exception_on_getting_undefined_property(): void
-    {
-        $error = new Error("");
-        $this->expectException(LogicException::class);
-        echo $error->{uniqid()};
     }
 }

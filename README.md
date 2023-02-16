@@ -92,5 +92,4 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 
-[documentation]:               https://icanboogie.org/api/errors/latest/
 [ICanBoogie]:                  https://icanboogie.org/

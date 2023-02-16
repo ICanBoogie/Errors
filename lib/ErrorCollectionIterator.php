@@ -12,6 +12,7 @@
 namespace ICanBoogie;
 
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Iterates over an error collection and return rendered errors.
@@ -31,16 +32,16 @@ class ErrorCollectionIterator implements IteratorAggregate
      * @phpstan-param ErrorRenderer|(callable(Error,string $attribute,ErrorCollection):string)|null $render_error
      */
     public function __construct(
-        private ErrorCollection $collection,
+        private readonly ErrorCollection $collection,
         ErrorRenderer|callable $render_error = null
     ) {
         $this->render_error = $render_error ?? fn(Error $error) => (string) $error;
     }
 
     /**
-     * @return iterable<string, string>
+     * @return Traversable<string, string>
      */
-    public function getIterator(): iterable
+    public function getIterator(): Traversable
     {
         foreach ($this->collection as $attribute => $error) {
             yield $attribute => $this->render_error($error, $attribute);
